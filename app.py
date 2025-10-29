@@ -1,34 +1,28 @@
 import gradio as gr
 from transformers import pipeline
 
-# 1. Apna pipeline load karo (yeh bas ek baar load hoga)
-print("Model load ho raha hai...")
+# 1. Load your pipeline (this will load just once)
+print("Loading model...")
 sentiment_classifier = pipeline("sentiment-analysis")
-print("Model load ho gaya!")
+print("Model loaded!")
 
-# 2. Ek function banao jo input lega aur output dega
+# 2. Create a function that will take input and give output
 def analyze_sentiment(text):
     result = sentiment_classifier(text)
-    # Result se label aur score nikaalo
+   # Extract the label and score from the result
     label = result[0]['label']
     score = result[0]['score']
-    # Result ko ek achhe format mein return karo
+   # Return the result in a good format
     return f"Bhavna (Sentiment): {label} \nConfidence: {score:.4f}"
 
-# 3. Gradio ka interface banao
-# gr.Interface ko batao:
-# - fn: Kaun sa function call karna hai (hamara 'analyze_sentiment')
-# - inputs: Input kaisa hoga ("text" box)
-# - outputs: Output kaisa dikhega ("text" box)
-# - title: App ka title
-# - description: App ke baare mein chhoti jaankari
+# 3. Built to interface banao
 app = gr.Interface(
     fn=analyze_sentiment,
-    inputs=gr.Textbox(lines=2, placeholder="Yahan apna English sentence likhein..."),
+    inputs=gr.Textbox(lines=2, placeholder="Write your English sentence here..."),
     outputs="text",
     title="😊😐😡 Sentiment Analyzer",
-    description="Yeh tool aapke sentence ko analyze karke batata hai ki woh POSITIVE hai ya NEGATIVE. (Hugging Face 'distilbert' model ka istemaal karke)"
+    description="This tool analyzes your sentence to determine whether it's positive or negative (using the Hugging Face 'Distillbert' model)."
 )
 
-# 4. App ko launch karo
+# 4. launch the App
 app.launch()
